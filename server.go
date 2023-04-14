@@ -1,0 +1,31 @@
+package main
+
+import (
+	"context"
+	"os"
+	"os/signal"
+	"net/http"
+
+	"github.com/fujiwara/ridge"
+)
+
+const (
+	defaultPort = "8080"
+)
+
+func serve(ctx context.Context) {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = defaultPort
+	}
+
+	mux := http.NewServeMux()
+	ridge.RunWithContext(ctx, ":"+port, "/", mux)
+}
+
+func main() {
+	ctx := context.Background()
+
+	sctx, _ := signal.NotifyContext(ctx, os.Interrupt, os.Kill)
+	serve(sctx)
+}
