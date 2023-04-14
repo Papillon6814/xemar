@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/fujiwara/ridge"
-	"github.com/Papillon6814/xemar/service/xendit"
+	"github.com/Papillon6814/xemar/service"
 )
 
 const (
@@ -27,7 +27,7 @@ func serve(ctx context.Context) {
 func main() {
 	ctx := context.Background()
 
-	
+	xenCli, err := NewXenClient()
 
 	sctx, _ := signal.NotifyContext(ctx, os.Interrupt, os.Kill)
 

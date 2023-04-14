@@ -5,30 +5,23 @@ package service
 import (
 	"fmt"
 	"os"
-	"github.com/xendit/xendit-go"
-	"github.com/xendit/xendit-go/$product$"
+	//"github.com/xendit/xendit-go"
+	"github.com/xendit/xendit-go/client"
 )
 
-type xenCli struct {}
+type XenClient struct {}
 
-func NewXenCli() xenCli {
-	return &xenCli{}
+func NewXenClient() *XenClient {
+	return &XenClient{}
 }
 
-func (x *XenCli) init() {
-	xendit.Opt.SecretKey = os.Getenv("XENDIT_SECRET")
-}
-
-func (x *XenCli) readAvailbaleBalance() {
-	data := balance.GetParams{
-		AccountType: "CASH",
+func (x *XenClient) Init() (*client.API, error) {
+	xenSecret := os.Getenv("XENDIT_SECRET")
+	if xenSecret == "" {
+		return nil, fmt.Errorf("failed to load xendit secret")
 	}
 
-	resp, err := balance.Get(&data)
-	if err != nil {
-		fmt.Errorf("unable to read balance")
-		return
-	}
+	xenCli := client.New(xenSecret)
 
-	fmt.Printf("balance: %+v\n", resp)
+	return xenCli, nil
 }
